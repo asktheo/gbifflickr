@@ -1,0 +1,25 @@
+<div class="card" *ngIf="occurrences">
+    <div class="card-body">
+        <table id="occurenceresult" class="table">
+            <caption *ngIf="occurrences.length === 1">{{occurrences.length}} occurence found!</caption>
+            <caption *ngIf="occurrences.length > 1">{{occurrences.length}} occurences found!</caption>
+            <caption *ngIf="occurrences.length == 0">0 occurences found!</caption>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Locality</th>
+                    <th>Name</th>
+                    <th>Count</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let occurence of occurrences">
+                    <td>{{occurence.eventDate | date }}</td>
+                    <td>{{occurence.locality }}</td>
+                    <td>{{occurence.vernacularName }}</td>
+                    <td>{{occurence.individualCount}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
