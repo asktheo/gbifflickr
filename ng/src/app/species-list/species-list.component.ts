@@ -4,6 +4,8 @@ import {SpeciesStat} from './species-stat';
 import {Observable} from 'rxjs';
 import * as _ from 'lodash';
 import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
+import {ActivatedRoute, ParamMap} from "@angular/router";
+import {Occurence} from "../occurence/occurence";
 
 @Component({
   selector: 'app-species-list',
@@ -11,9 +13,17 @@ import {debounceTime, distinctUntilChanged, map} from 'rxjs/operators';
   styleUrls: ['./species-list.component.scss']
 })
 export class SpeciesListComponent implements OnInit {
+  userId : string;
+  occurences : Occurence[] = [];
 
   constructor(private occurenceService: OccurenceService) {
-    this.occurenceService = occurenceService;
+    occurenceService.currentUser.subscribe(id => {
+      this.userId = id;
+    });
+    occurenceService.currentOccurences.subscribe(data => {
+      this.occurences = data;
+      this.initWithData();
+    });
   }
 
   private species: any;
@@ -68,21 +78,21 @@ export class SpeciesListComponent implements OnInit {
           .slice(0, 10))
     )
 
-  ngOnInit() {
-    if (this.occurenceService.initialized) {
+  initWithData() {
+    this.species = _.groupBy(this.occurences, o => o.speciesKey);
 
-      this.species = _.groupBy(this.occurenceService.fromCache(), o => o.speciesKey);
-
-      for (const spec in this.species) {
-        const occurencesForSpecies = this.species[spec]; // get the object
-        this.speciesList.push({
-          // take the vernacular name from the first (all should have the same, since it is the same species
-          danishName: occurencesForSpecies[0].vernacularName,
-          numberOfSites: _.chain(occurencesForSpecies).groupBy('locationID').toPairs().value().length, // group by site
-          totalOfIndividuals: _.sumBy(occurencesForSpecies, 'individualCount'), // sum through all records
-          records: occurencesForSpecies
-        });
-      }
+    for (const spec in this.species) {
+      const occurencesForSpecies = this.species[spec]; // get the object
+      this.speciesList.push({
+        // take the vernacular name from the first (all should have the same, since it is the same species
+        danishName: occurencesForSpecies[0].vernacularName,
+        numberOfSites: _.chain(occurencesForSpecies).groupBy('locationID').toPairs().value().length, // group by site
+        totalOfIndividuals: _.sumBy(occurencesForSpecies, 'individualCount'), // sum through all records
+        records: occurencesForSpecies
+      });
     }
   }
+
+  ngOnInit() {}
+
 }

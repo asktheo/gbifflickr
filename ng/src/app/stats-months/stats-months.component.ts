@@ -9,8 +9,17 @@ import {Occurence} from '../occurence/occurence';
 })
 export class StatsMonthsComponent implements OnInit {
 
+  userId : string;
+  occurences : Occurence[] = [];
+
   constructor(private occurenceService: OccurenceService) {
-    this.occurenceService = occurenceService;
+    occurenceService.currentUser.subscribe(id => {
+      this.userId = id;
+    });
+    occurenceService.currentOccurences.subscribe(data => {
+      this.occurences = data;
+      this.initWithData();
+    });
   }
 
   public barChartOptions = {
@@ -26,19 +35,21 @@ export class StatsMonthsComponent implements OnInit {
   }];
 
   ngOnInit() {
+
+  }
+
+  initWithData(){
     const arr0 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     const arr1 = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    if (this.occurenceService.initialized) {
-      this.occurenceService.fromCache().forEach(o => {
-        if (o.year === 2019) {
-          arr1[o.month - 1] = arr1[o.month - 1] + 1;
-        } else {
-          arr0[o.month - 1] = arr0[o.month - 1] + 1;
-        }
-      });
-      this.barChartData[0].data = arr0;
-      this.barChartData[1].data = arr1;
-    }
+    this.occurences.forEach(o => {
+      if (o.year === 2019) {
+        arr1[o.month - 1] = arr1[o.month - 1] + 1;
+      } else {
+        arr0[o.month - 1] = arr0[o.month - 1] + 1;
+      }
+    });
+    this.barChartData[0].data = arr0;
+    this.barChartData[1].data = arr1;
   }
 
 }

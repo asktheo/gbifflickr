@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {OccurenceService} from '../occurence/occurence.service';
+import {Occurence} from "../occurence/occurence";
 
 @Component({
   selector: 'app-stats-years',
@@ -8,8 +9,17 @@ import {OccurenceService} from '../occurence/occurence.service';
 })
 export class StatsYearsComponent implements OnInit {
 
+  userId : string;
+  occurences : Occurence[] = [];
+
   constructor(private occurenceService: OccurenceService) {
-    this.occurenceService = occurenceService;
+    occurenceService.currentUser.subscribe(id => {
+      this.userId = id;
+    });
+    occurenceService.currentOccurences.subscribe(data => {
+      this.occurences = data;
+      this.initWithData();
+    });
   }
 
   public barChartOptions = {
@@ -22,17 +32,17 @@ export class StatsYearsComponent implements OnInit {
   public barChartData = [{data: [0, 0, 0, 0, 0, 0, 0], label: 'Occurences'}];
 
   ngOnInit() {
+  }
+
+  initWithData(){
     const arr = [0, 0, 0, 0, 0, 0, 0];
-    if (this.occurenceService.initialized) {
-      this.occurenceService.fromCache().forEach(o => {
+      this.occurences.forEach(o => {
         if (o.year < 2015) {
           arr[0] = arr[0] + 1;
         } else {
           arr[o.year - 2015 + 1] = arr[o.year - 2015 + 1] + 1;
         }
-
       });
       this.barChartData[0].data = arr;
     }
-  }
 }

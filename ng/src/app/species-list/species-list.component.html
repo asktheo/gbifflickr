@@ -1,66 +1,70 @@
 <div class="row">
-    <div class="col-5"><h3>User's checklist in DOFbasen/GBIF</h3></div>
-    <div class="col-7">
-        <div class="input-group">
-          <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="speciesName" [ngbTypeahead]="search" (change)="filterSpecies()" placeholder="Søg art"/>
-          <button class="btn btn-info input-group-append" type="button" (click)="reset()">Reset</button>
-        </div>
+  <div class="col-5"><h3>User's checklist in DOFbasen/GBIF</h3></div>
+  <div class="col-7">
+    <div class="input-group">
+      <input id="typeahead-basic" type="text" class="form-control" [(ngModel)]="speciesName" [ngbTypeahead]="search"
+             (change)="filterSpecies()" placeholder="Søg art"/>
+      <button class="btn btn-info input-group-append" type="button" (click)="reset()">Reset</button>
     </div>
+  </div>
 </div>
 <div class="row">
-    <div class="col-7">
-        <div *ngIf="!selectedSpecies">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>Species</th>
-                        <th>Number of Sites</th>
-                        <th>Number of Occurrences</th>
-                        <th>Total Count</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let spec of speciesList" (click)="selectSpecies(spec)">
-                        <td>{{ spec.danishName}}</td>
-                        <td>{{ spec.numberOfSites }}</td>
-                        <td>{{ spec.records.length }}</td>
-                        <td>{{ spec.totalOfIndividuals }}</td>
-                    </tr>
-                </tbody>
+  <div class="col-7">
+    <div *ngIf="!selectedSpecies">
+      <table class="table table-hover">
+        <thead>
+        <tr>
+          <th>Species</th>
+          <th>Number of Sites</th>
+          <th>Number of Occurrences</th>
+          <th>Total Count</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let spec of speciesList" (click)="selectSpecies(spec)">
+          <td>{{ spec.danishName}}</td>
+          <td>{{ spec.numberOfSites }}</td>
+          <td>{{ spec.records.length }}</td>
+          <td>{{ spec.totalOfIndividuals }}</td>
+        </tr>
+        </tbody>
 
-            </table>
-        </div>
-        <div *ngIf="selectedSpecies">
-            <table id="recordsForSpecies" class="table table-sm table-striped">
-                <caption *ngIf="selectedSpecies.records.length === 1">{{selectedSpecies.records.length}} record found!</caption>
-                <caption *ngIf="selectedSpecies.records.length > 1">{{selectedSpecies.records.length}} records found!</caption>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Locality</th>
-                        <th>Count</th>
-                        <th>Behavior</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let record of selectedSpecies.records">
-                        <td>{{record.eventDate | date }}</td>
-                        <td>{{record.locality }}</td>
-                        <td>{{record.individualCount }}</td>
-                        <td>{{record.behavior }}</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+      </table>
     </div>
-    <div class="col-5" *ngIf="selectedSpecies">
-        <canvas baseChart
-        [datasets]="monthChartData"
-        [options]="monthChartOptions"
-        [labels]="monthChartLabels"
-        [legend]="monthChartLegend"
-        [chartType]="monthChartType"></canvas>
+    <div *ngIf="selectedSpecies">
+      <table id="recordsForSpecies" class="table table-sm table-striped">
+        <caption *ngIf="selectedSpecies.records.length === 1">{{selectedSpecies.records.length}} record found!</caption>
+        <caption *ngIf="selectedSpecies.records.length > 1">{{selectedSpecies.records.length}} records found!</caption>
+        <thead>
+        <tr>
+          <th>Date</th>
+          <th>Locality</th>
+          <th>Count</th>
+          <th>Behavior</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let record of selectedSpecies.records">
+          <td>{{record.eventDate | date }}</td>
+          <td>{{record.locality }}</td>
+          <td>{{record.individualCount }}</td>
+          <td>{{record.behavior }}</td>
+        </tr>
+        </tbody>
+      </table>
     </div>
+  </div>
+  <div class="col-5" *ngIf="selectedSpecies">
+    <canvas baseChart
+            [datasets]="monthChartData"
+            [options]="monthChartOptions"
+            [labels]="monthChartLabels"
+            [legend]="monthChartLegend"
+            [chartType]="monthChartType"></canvas>
+    <div class="row">
+      <app-species-media [searchName]="speciesName" [userId]="userId"></app-species-media>
+    </div>
+  </div>
 </div>
 
 

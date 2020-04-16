@@ -1,32 +1,22 @@
 <nav>
   <ul>
     <li>
-      <a routerLink="occurences/user/5e947e7e4938265112b0a6b6" [class.activated]="currentUrl == 'occurences/user/5e947e7e4938265112b0a6b6'">
-        Data set (Theo)
-      </a>
-    </li>
-    <li>
-      <a routerLink="occurences/user/5e947e7e4938265112b0a6b5" [class.activated]="currentUrl == 'occurences/user/5e947e7e4938265112b0a6b5'">
-        Data set (Philip)
-      </a>
-    </li>
-    <li>
-      <a routerLink="occurences/stats-months" [class.activated]="currentUrl == 'occurences/stats-months'">
+      <a [routerLink]="'stats-months'" routerLinkActive="active">
         Occurrences per Month
       </a>
     </li>
     <li>
-      <a routerLink="occurences/stats-years" [class.activated]="currentUrl == 'occurences/stats-years'">
+      <a [routerLink]="'stats-years'" routerLinkActive="active">
         Occurrences per Year
       </a>
     </li>
     <li>
-      <a routerLink="occurences/stats-activity" [class.activated]="currentUrl == 'occurences/stats-activity'">
+      <a [routerLink]="'stats-activity'" routerLinkActive="active">
         Activity per Year
       </a>
     </li>
     <li>
-      <a routerLink="occurences/species-list" [class.activated]="currentUrl == 'occurences/species-list'">
+      <a [routerLink]="'species-list'" routerLinkActive="active">
         Species List
       </a>
     </li>

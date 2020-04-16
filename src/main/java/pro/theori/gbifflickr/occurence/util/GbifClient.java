@@ -9,6 +9,7 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.springframework.stereotype.Service;
 import pro.theori.gbifflickr.occurence.model.OccurenceResponse;
+import pro.theori.gbifflickr.util.HttpUtil;
 
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
@@ -42,7 +43,7 @@ public class GbifClient {
         params.put("recorded_by", recordedBy);
 
         String url = gbifSearchUrl + params.entrySet().stream()
-                .map(p -> urlEncodeUTF8(p.getKey()) + "=" + urlEncodeUTF8(p.getValue()))
+                .map(p -> HttpUtil.urlEncodeUTF8(p.getKey()) + "=" + HttpUtil.urlEncodeUTF8(p.getValue()))
                 .reduce((p1, p2) -> p1 + "&" + p2)
                 .orElse("");
 
@@ -59,12 +60,5 @@ public class GbifClient {
 
     }
 
-    static String urlEncodeUTF8(String s) {
-        try {
-            return URLEncoder.encode(s, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new UnsupportedOperationException(e);
-        }
-    }
 
 }

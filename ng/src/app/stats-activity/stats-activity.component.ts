@@ -9,8 +9,17 @@ import {Occurence} from '../occurence/occurence';
 })
 export class StatsActivityComponent implements OnInit {
 
+  userId : string;
+  occurences : Occurence[] = [];
+
   constructor(private occurenceService: OccurenceService) {
-    this.occurenceService = occurenceService;
+    occurenceService.currentUser.subscribe(id => {
+      this.userId = id;
+    });
+    occurenceService.currentOccurences.subscribe(data => {
+      this.occurences = data;
+      this.initWithData();
+    });
   }
 
   public barChartOptions = {
@@ -25,13 +34,14 @@ export class StatsActivityComponent implements OnInit {
     {data: [0, 0, 0, 0, 0, 0, 0], label: 'Days in field'}];
 
   ngOnInit() {
-    if (this.occurenceService.initialized) {
-      const before2015 = this.occurenceService.fromCache().filter(o => o.year < 2015);
+  }
+
+  initWithData(){
+      const before2015 = this.occurences.filter(o => o.year < 2015);
       this.groupBy(0, before2015);
       this.range(2015, 2021).forEach(y => {
-        this.groupBy(y - 2015 + 1, this.occurenceService.fromCache().filter(o => o.year === y));
+        this.groupBy(y - 2015 + 1, this.occurences.filter(o => o.year === y));
       });
-    }
   }
 
   groupBy(index: number, occurences: Occurence[]): void {

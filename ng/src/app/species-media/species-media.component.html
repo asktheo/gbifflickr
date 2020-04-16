@@ -1,0 +1,12 @@
+<div class='col-12'>
+  <ngb-carousel>
+    <ng-template ngbSlide *ngFor="let photo of speciesPhotos">
+      <img class="img-fluid" [src]="photo.picture"/>
+      <div class="carousel-caption">
+        <a href="https://www.flickr.com/{{photo.userId}}/{{photo.photoId}}">Vis på Flickr</a>
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>
+
+
